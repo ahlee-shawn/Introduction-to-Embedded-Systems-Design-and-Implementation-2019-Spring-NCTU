@@ -7,7 +7,7 @@ def job():
 	with picamera.PiCamera() as camera:
 		camera.start_preview()
 		
-		for i, filename in enumerate(camera.capture_continuous('image20{timestamp:%y%m%d}_{timestamp:%H%M}.jpg')):
+        for i, filename in enumerate(camera.capture_continuous('image20{timestamp:%y%m%d}_{timestamp:%H%M}.jpg')):
 			time.sleep(1)
 			if i == 9:
 				break
