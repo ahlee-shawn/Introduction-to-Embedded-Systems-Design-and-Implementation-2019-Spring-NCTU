@@ -1,6 +1,8 @@
 import sys
 import os
 import socket
+import pyautogui
+import time
 
 current_x = 0
 current_y = 0
@@ -27,20 +29,49 @@ class Server(object):
 		self.sock.bind((self.ip, self.port))
 		self.sock.listen(100)
 		socket.setdefaulttimeout(0.1)
+		prev_flap = 0
+		landing_gear = 1
+		screen_size = pyautogui.size()
+		height = screen_size.height
+		width = screen_size.width
+		pyautogui.PAUSE = 0
 		while True:
 			try:
 				conn, addr = self.sock.accept()
 				with conn:
+					start = time.time()
 					cmd = conn.recv(4096).decode()
 					gear, calibrate, terminate, add_speed, minus_speed, flap, current_x, current_y, current_z = self.__process_command(cmd)
 					'''if calibrate == 1:
 						current_x = 0
 						current_y = 0
 						current_z = 0'''
+					screen_x = width / 2 - current_y
+					screen_y = height / 2 - current_z
+					pyautogui.moveTo(screen_x, screen_y, 0)
+					if gear != landing_gear:
+						pyautogui.press('g')
+						landing_gear = gear
+					if flap > prev_flap:
+						pyautogui.press('f')
+						prev_flap = flap
+					elif flap < prev_flap:
+						pyautogui.hotkey('shift', 'f')
+						prev_flap = flap
+					if add_speed == 1:
+						pyautogui.keyDown('pageup')
+					else:
+						print("keyUp")
+						pyautogui.keyUp('pageup')
+					if minus_speed == 1:
+						pyautogui.keyDown('pagedown')
+					else:
+						pyautogui.keyUp('pagedown')
 					if terminate == 1:
 						conn.close()
 						sock.close()
 						sys.exit()
+					print("time: {}".format(time.time() - start))
 			except Exception as e:
 				print(e, file=sys.stderr)
 

@@ -4,9 +4,10 @@ import time
 import smbus
 import socket
 import threading
+import os
 
-Gear = 15
-Calibrate = 38
+Gear = 38
+Calibrate = 15
 Terminate = 40
 Flap_Button_Up = 7
 Flap_Button_Down = 12
@@ -161,6 +162,16 @@ class Client(object):
 				z = -1 * current_z
 			else:
 				z = current_z
+			os.system('clear')
+			print("Gear: {}".format(gear))
+			print("calibrate: {}".format(calibrate))
+			print("terminate: {}".format(terminate))
+			print("add_speed: {}".format(add_speed))
+			print("minus_speed: {}".format(minus_speed))
+			print("flap: {}".format(current_flap))
+			print("current_x: {}".format(current_x))
+			print("current_y: {}".format(current_y))
+			print("current_z: {}".format(current_z))
 			msg = format(int(gear), '01b') + format(int(calibrate), '01b') + format(int(terminate), '01b') + format(int(add_speed), '01b') + format(int(minus_speed), '01b') + format(int(current_flap), '03b') + format(int(sign_x), '01b') + format(int(x), '013b') + format(int(sign_y), '01b') + format(int(y), '013b') + format(int(sign_z), '01b') + format(int(z), '013b')
 			with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 				s.connect((self.ip, self.port))
@@ -172,8 +183,8 @@ class Client(object):
 			time_to_sleep = 0.1 - time_past
 			if time_to_sleep > 0:
 				time.sleep(time_to_sleep)
-			else:
-				print(time_to_sleep)
+			#else:
+				#print(time_to_sleep)
 
 def launch_client(ip, port):
 	c = Client(ip, port)
