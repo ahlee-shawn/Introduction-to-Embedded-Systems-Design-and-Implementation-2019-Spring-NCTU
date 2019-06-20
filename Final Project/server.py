@@ -82,29 +82,21 @@ class Server(object):
 		add_speed = int(cmd[3], 2)
 		minus_speed = int(cmd[4], 2)
 		flap = int(cmd[5:8], 2)
-		sign_x = int(cmd[8], 2)
-		if sign_x == 0:
-			sign_x = -1
-		current_x = int(cmd[9:22], 2)
-		sign_y = int(cmd[22], 2)
-		if sign_y == 0:
-			sign_y = -1
-		current_y = int(cmd[23:36], 2)
-		sign_z = int(cmd[36], 2)
-		if sign_z == 0:
-			sign_z = -1
-		current_z = int(cmd[37:50], 2)
+		current_x = int(cmd[8:21], 2)
+		current_y = int(cmd[21:39], 2)
+		current_z = int(cmd[39:57], 2)
 		os.system('clear')
+		#os.system('cls')
 		print("Gear: {}".format(gear))
 		print("calibrate: {}".format(calibrate))
 		print("terminate: {}".format(terminate))
 		print("add_speed: {}".format(add_speed))
 		print("minus_speed: {}".format(minus_speed))
 		print("flap: {}".format(flap))
-		print("current_x: {}".format(current_x * sign_x))
-		print("current_y: {}".format(current_y * sign_y))
-		print("current_z: {}".format(current_z * sign_z))
-		return gear, calibrate, terminate, add_speed, minus_speed, flap, current_x * sign_x, current_y * sign_y, current_z * sign_z
+		print("current_x: {}".format(current_x))
+		print("current_y: {}".format(current_y))
+		print("current_z: {}".format(current_z))
+		return gear, calibrate, terminate, add_speed, minus_speed, flap, current_x, current_y, current_z
 
 
 def launch_server(ip, port):
